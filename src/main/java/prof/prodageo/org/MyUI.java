@@ -3,6 +3,7 @@ package prof.prodageo.org;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
@@ -14,6 +15,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 
 
 import org.slf4j.Logger;
@@ -38,16 +40,17 @@ public class MyUI extends UI {
 
     /* explicit declaration as attributes of graphical components for GenMyModel */
         final VerticalLayout layoutPrincipal = new VerticalLayout();
-        final HorizontalLayout layout1 = new HorizontalLayout();
+        final GridLayout layout1 = new GridLayout(3,1);
         final Label titre = new Label("Friendly Fish");
-        final Link linkUtilisateur = new Link("Mon compte Utilisateur!", new ExternalResource("http://tacospin.com/"));
+        final Link lienUtilisateur = new Link("Mon compte Utilisateur", new ExternalResource("http://tacospin.com/"));
         final HorizontalLayout layout2 = new HorizontalLayout();
-        final TextField name2 = new TextField();
-        Button button2 = new Button("Touch Me") ;
+        final TextField barreRecherche = new TextField();
+        Button boutonRecherche = new Button("Recherche") ;
+        Button boutonRechercheAvancee = new Button("Recherche avancée") ;
         final HorizontalLayout layout3 = new HorizontalLayout();
-        final TextField name3 = new TextField();
-        Button button3 = new Button("Caress Me") ;
-
+        Button boutonComparateur = new Button("<br>Comparateur</br> <br><b>Poisson/Poisson</b></br> <br></br>") ;
+        Button boutonListePoissons = new Button("<br>Rechercher</br> <br>la <b>liste des poissons compatibles</br> <br>avec le poisson</b></br>") ;
+        Button boutonEau = new Button("<br>Rechercher</br> <br>la liste des poissons compatibles</br> <br>avec un <b>type d'eau</b></br>") ;
 
 
 
@@ -88,19 +91,46 @@ public class MyUI extends UI {
         ClickMeClass callback = new ClickMeClass() ;
         button3.addClickListener( callback ) ;*/
 
+        titre.setWidth("100%");
+        lienUtilisateur.setTargetName("_blank");
+        lienUtilisateur.setIcon(FontAwesome.USER);
 
-        layout1.addComponents(titre,linkUtilisateur);
+        layout1.addComponent(titre,1,0);
+        layout1.addComponent(lienUtilisateur,2,0);
+        layout1.setSizeFull();
         layout1.setMargin(true);
         layout1.setSpacing(true);
         setContent(layout1);
 
-        layout2.addComponents(name2, button2);
+        titre.setSizeUndefined();
+        lienUtilisateur.setSizeUndefined();
+        layout1.setComponentAlignment(titre, Alignment.MIDDLE_CENTER);
+        layout1.setComponentAlignment(lienUtilisateur, Alignment.MIDDLE_CENTER);
+
+        barreRecherche.setIcon(FontAwesome.SEARCH);
+        barreRecherche.setInputPrompt("Recherchez votre poisson");
+        barreRecherche.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+        barreRecherche.setColumns(50);
+        boutonRechercheAvancee.setIcon(FontAwesome.SEARCH_PLUS);
+        boutonRechercheAvancee.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+
+        layout2.addComponents(barreRecherche, boutonRecherche, boutonRechercheAvancee);
         layout2.setMargin(true);
         layout2.setSpacing(true);
         setContent(layout2);
 
-        layout3.addComponents(name3, button3);
-        layout3.setMargin(true);
+        boutonComparateur.setHtmlContentAllowed(true);
+        boutonComparateur.setIcon(FontAwesome.HEART_O);
+        boutonComparateur.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP);
+        boutonListePoissons.setHtmlContentAllowed(true);
+        boutonListePoissons.setIcon(FontAwesome.LIST);
+        boutonListePoissons.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP);
+        boutonEau.setHtmlContentAllowed(true);
+        boutonEau.setIcon(FontAwesome.TINT);
+        boutonEau.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP);
+
+        layout3.addComponents(boutonComparateur, boutonListePoissons, boutonEau);
+        //layout3.setMargin(true);
         layout3.setSpacing(true);
         setContent(layout3);
 
@@ -108,6 +138,10 @@ public class MyUI extends UI {
         layoutPrincipal.setSpacing(true);
         layoutPrincipal.addComponents(layout1, layout2, layout3);
         setContent(layoutPrincipal);
+
+        layoutPrincipal.setComponentAlignment(layout1, Alignment.TOP_CENTER);
+        layoutPrincipal.setComponentAlignment(layout2, Alignment.BOTTOM_CENTER);
+        layoutPrincipal.setComponentAlignment(layout3, Alignment.TOP_CENTER);
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
