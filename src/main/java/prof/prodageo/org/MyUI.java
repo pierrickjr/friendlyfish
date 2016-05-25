@@ -40,18 +40,20 @@ public class MyUI extends UI {
         private static final Logger log = LoggerFactory.getLogger(MyUIServlet.class);
 
     /* explicit declaration as attributes of graphical components for GenMyModel */
+        final VerticalLayout popupContent = new VerticalLayout();
         final VerticalLayout layoutPrincipal = new VerticalLayout();
         final GridLayout layout1 = new GridLayout(3,1);
         final Label titre = new Label("<h1>Friendly Fish</h1>", ContentMode.HTML);
-        final Link lienUtilisateur = new Link("Mon compte Utilisateur", new ExternalResource("http://tacospin.com/"));
+        final PopupView popup = new PopupView("Mon compte Utilisateur", popupContent);
+        final Button  connecter = new Button("Se connecter");
         final HorizontalLayout layout2 = new HorizontalLayout();
         final TextField barreRecherche = new TextField();
-        Button boutonRecherche = new Button("Recherche") ;
-        Button boutonRechercheAvancee = new Button("Recherche avancée") ;
+        final Button boutonRecherche = new Button("Recherche") ;
+        final Button boutonRechercheAvancee = new Button("Recherche avancée") ;
         final HorizontalLayout layout3 = new HorizontalLayout();
-        Button boutonComparateur = new Button("<br>Comparateur</br> <br><b>Poisson/Poisson</b></br> <br></br>") ;
-        Button boutonListePoissons = new Button("<br>Rechercher</br> <br>la <b>liste des poissons compatibles</br> <br>avec le poisson</b></br>") ;
-        Button boutonEau = new Button("<br>Rechercher</br> <br>la liste des poissons compatibles</br> <br>avec un <b>type d'eau</b></br>") ;
+        final Button boutonComparateur = new Button("<br>Comparateur</br> <br><b>Poisson/Poisson</b></br> <br></br>") ;
+        final Button boutonListePoissons = new Button("<br>Rechercher</br> <br>la <b>liste des poissons compatibles</br> <br>avec le poisson</b></br>") ;
+        final Button boutonEau = new Button("<br>Rechercher</br> <br>la liste des poissons compatibles</br> <br>avec un <b>type d'eau</b></br>") ;
 
 
 
@@ -71,7 +73,6 @@ public class MyUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-
 
         // final VerticalLayout layout = new VerticalLayout();
 
@@ -93,20 +94,24 @@ public class MyUI extends UI {
         button3.addClickListener( callback ) ;*/
 
         titre.setWidth("100%");
-        lienUtilisateur.setTargetName("_blank");
-        lienUtilisateur.setIcon(FontAwesome.USER);
+        popup.setIcon(FontAwesome.USER);
 
         layout1.addComponent(titre,1,0);
-        layout1.addComponent(lienUtilisateur,2,0);
+        layout1.addComponent(popup,2,0);
+
+        popupContent.addComponent(new TextField("Login"));
+        popupContent.addComponent(new TextField("Mot de passe"));
+        popupContent.addComponent(connecter);
+
         layout1.setSizeFull();
         layout1.setMargin(true);
         layout1.setSpacing(true);
         setContent(layout1);
 
         titre.setSizeUndefined();
-        lienUtilisateur.setSizeUndefined();
+        popup.setSizeUndefined();
         layout1.setComponentAlignment(titre, Alignment.MIDDLE_CENTER);
-        layout1.setComponentAlignment(lienUtilisateur, Alignment.MIDDLE_CENTER);
+        layout1.setComponentAlignment(popup, Alignment.MIDDLE_CENTER);
 
         barreRecherche.setIcon(FontAwesome.SEARCH);
         barreRecherche.setInputPrompt("Recherchez votre poisson");
