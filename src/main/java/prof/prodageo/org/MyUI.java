@@ -16,6 +16,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.shared.ui.label.ContentMode;
 
 
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public class MyUI extends UI {
     /* explicit declaration as attributes of graphical components for GenMyModel */
         final VerticalLayout layoutPrincipal = new VerticalLayout();
         final GridLayout layout1 = new GridLayout(3,1);
-        final Label titre = new Label("Friendly Fish");
+        final Label titre = new Label("<h1>Friendly Fish</h1>", ContentMode.HTML);
         final Link lienUtilisateur = new Link("Mon compte Utilisateur", new ExternalResource("http://tacospin.com/"));
         final HorizontalLayout layout2 = new HorizontalLayout();
         final TextField barreRecherche = new TextField();
