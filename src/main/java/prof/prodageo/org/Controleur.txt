@@ -1,0 +1,21 @@
+attribut list<POisson>
+attribut compatibles
+att bouch trou
+//liste 1 = desc et reste = carac
+String getpoisson (nom){
+  list.add(nom)
+
+  if (estBouchonne)
+    if(list.size() == 2)
+      caracPOisson = "eau truc machin"; "Nom, desc eau, ..."
+      compatibles = "12%"; //retourn qqch en dur string vide ou null
+  else
+    caracPOisson = facade.getCaracteristiquePoisson(P1) => retourne un string
+    if(list.size() == 2)
+      compatibles = facade.getCompa(p1, p2);
+
+    retourne caracPOisson
+}
+
+getCompa
+  return compa

@@ -60,6 +60,11 @@ final ComboBox choixPoisson = new ComboBox("Poisson 1");
 final Button boutonAjouter = new Button("Ajouter dans l'aquarium");
 final Label description = new Label("Description du poisson 1");
 final Label compatibilite = new Label("Caractéristiques du poisson 1");
+final Button faireCompatibilite = new Button("Calculer la compatibilite entre les deux poissons");
+private String poisson1=null;
+private String poisson2=null;
+final Label resFaireCompatibilite = new Label("");
+private ComparaisonPoisson maComparaison = new ComparaisonPoisson(true);
 
 final VerticalLayout layout5 = new VerticalLayout();
 
@@ -74,8 +79,8 @@ final Label compatibilite2 = new Label("Caractéristiques du poisson 2");
 /* explicit callback */
 /* https://vaadin.com/docs/-/part/framework/application/application-events.html */
 
-
-public class IdPoisson extends Object implements Serializable {
+//controleur
+/*public class IdPoisson extends Object implements Serializable {
 String nomPoisson;
 IdPoisson (String nom) {
         nomPoisson = nom;
@@ -84,25 +89,28 @@ IdPoisson (String nom) {
 public String toString () {
         return nomPoisson;
 }
-}
+}*/
 
 @Override
 protected void init(VaadinRequest vaadinRequest) {
 
+        //contoleur
         String ensemblePoissons[] = {"Truite", "Saumon", "Poisson Rouge", "Étoile de Mer"};
         for (int i=0; i<ensemblePoissons.length; i++) {
-                choixPoisson.addItem(new IdPoisson(ensemblePoissons[i]));
-                choixPoisson2.addItem(new IdPoisson(ensemblePoissons[i]));
+                choixPoisson.addItem(ensemblePoissons[i]);
+                choixPoisson2.addItem(ensemblePoissons[i]);
         }
 
         boutonEau.addClickListener( e ->
-        layoutPrincipal.addComponent(new Label("Le bouton Eau marche")));
+            layoutPrincipal.addComponent(new Label("Le bouton Eau marche")));
         boutonListePoissons.addClickListener( e ->
-        layoutPrincipal.addComponent(new Label("Le bouton Liste Poissons marche")));
+            layoutPrincipal.addComponent(new Label("Le bouton Liste Poissons marche")));
         boutonAjouter.addClickListener( e ->
-        layoutPrincipal.addComponent(new Label("Le bouton Ajouter1 marche")));
+            layoutPrincipal.addComponent(new Label("Le bouton Ajouter1 marche")));
         boutonAjouter2.addClickListener( e ->
-        layoutPrincipal.addComponent(new Label("Le bouton Ajouter2 marche")));
+            layoutPrincipal.addComponent(new Label("Le bouton Ajouter2 marche")));
+        faireCompatibilite.addClickListener( e ->
+                resFaireCompatibilite.setValue(maComparaison.calculerComparaison()));
 
         titre.setWidth("100%");
         titre.setSizeUndefined();
@@ -135,14 +143,23 @@ protected void init(VaadinRequest vaadinRequest) {
         layout3.addComponents(boutonListePoissons, boutonEau);
         layout3.setSpacing(true);
         setContent(layout3);
-
-        layout4.addComponents(choixPoisson,boutonAjouter,description,compatibilite);
+        //avant le clic bouton créer new controller avant event
+        layout4.addComponents(choixPoisson,boutonAjouter,description,compatibilite,faireCompatibilite,resFaireCompatibilite);
         choixPoisson.setItemCaptionMode(ItemCaptionMode.ID);
 
-        choixPoisson.addValueChangeListener(event -> {
+        choixPoisson.addValueChangeListener(event -> { //prendre le controleur c, appeler getpoisson(event...)
+                                                        //si getCOmpa != null retourn compa
+                                                        ////en dur dns controleur
+                                                        ///// liste carac string
+                                                        ///laytou.addComponent(listCarac.get(1))
+                                                        ///listCarac.remove(1) pour la suite des carac
+                                                        ////: for each pour afficher chac carac
                                             layoutPrincipal.addComponent(new Label("Le poisson 1 choisi : " + event.getProperty().getValue()));
                                             description.setValue("Description du poisson 1 : " + event.getProperty().getValue());
-                                            compatibilite.setValue("Caractéristiques du poisson 1 : " + event.getProperty().getValue());});
+                                            compatibilite.setValue("Caractéristiques du poisson 1 : " + event.getProperty().getValue());
+                                            poisson1=(String)choixPoisson.getValue();
+                                            maComparaison.setPoisson1(poisson1);
+                                                    });
 
         layout4.setMargin(true);
         layout4.setSpacing(true);
@@ -160,13 +177,14 @@ protected void init(VaadinRequest vaadinRequest) {
 
         layout7.addComponents(choixPoisson2,boutonAjouter2,description2);
         choixPoisson2.setItemCaptionMode(ItemCaptionMode.ID);
-        choixPoisson2.addValueChangeListener(event ->
-                                             layoutPrincipal.addComponent(new Label("Le poisson 2 choisi : " + event.getProperty().getValue())));
-        choixPoisson2.addValueChangeListener(event ->
-                                             description2.setValue("Description du poisson 2 : " + event.getProperty().getValue()));
-        choixPoisson2.addValueChangeListener(event ->
-                                             compatibilite2.setValue("Caractéristiques du poisson 2 : " + event.getProperty().getValue()));
-
+        choixPoisson2.addValueChangeListener(event ->{
+                                             layoutPrincipal.addComponent(new Label("Le poisson 2 choisi : " + event.getProperty().getValue()));
+                                             description2.setValue("Description du poisson 2 : " + event.getProperty().getValue());
+                                             compatibilite2.setValue("Caractéristiques du poisson 2 : " + event.getProperty().getValue());
+                                             poisson2=(String)choixPoisson2.getValue();
+                                             maComparaison.setPoisson2(poisson2);
+                                             // compatibilite pourcentage en plus
+                                                });
         layout7.setMargin(true);
         layout7.setSpacing(true);
         setContent(layout7);
@@ -200,4 +218,41 @@ protected void init(VaadinRequest vaadinRequest) {
 @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
 public static class MyUIServlet extends VaadinServlet {
 }
+}
+
+class ComparaisonPoisson{
+    private String poisson1;
+    private String poisson2;
+    private Boolean bouchon;
+
+    public ComparaisonPoisson(Boolean bol){
+        poisson1="";
+        poisson2="";
+        bouchon=bol;
+    }
+
+
+    public void setPoisson1(String res){
+        poisson1=res;
+    }
+
+    public void setPoisson2(String res){
+        poisson2=res;
+    }
+
+    public String calculerComparaison(){
+        if(bouchon && (poisson1!=null) && (poisson2!=null)){
+            if(poisson1==poisson2){
+                return "100%";
+            }else{
+                return "50%";
+            }
+        }else{
+            return "";
+        }
+    }
+
+
+
+
 }
